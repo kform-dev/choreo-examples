@@ -2,6 +2,8 @@
 
 This exercise will walk through a basic Hello world example. The API is already generated
 
+This exercise will walk through a basic Hello world example. The API is already generated
+
 clone the choreo-examples git repo
 
 ```bash
@@ -43,7 +45,7 @@ choreoctl api-resources
 &{helloworlds example.com v1alpha1 HelloWorld HelloWorldList true []}
 ```
 
-When executing the following command no result should be shown.  
+When executing the following command no result should be shown, since no hello world resources are loaded
 
 ```
 choreoctl get customresourcedefinitions.apiextensions.k8s.io
@@ -65,12 +67,143 @@ Reconciler                         Start Stop Requeue Error
 example.com.helloworlds.helloworld     2    2       0     0
 ```
 
-The reconciler can be found in the following
+What just happened?
 
-/// details | Schema
+a. the reconciler got loaded
+
+/// details | HelloWorld Reconciler
 
 ```yaml
 --8<--
-https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/reconcilers/example.com.helloworlds.test.yaml
+https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/reconcilers/example.com.helloworlds.helloworld.star
 --8<--
+```
+
+///
+
+b. The reconciler registered to be informed on any HelloWorld resource change
+
+```yaml
+    group: example.com
+    version: v1alpha1
+    kind: HelloWorld
+```
+
+/// details | HelloWorld Reconciler Hook
+
+```yaml
+--8<--
+https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/reconcilers/example.com.helloworlds.helloworld.yaml
+--8<--
+```
+
+///
+
+c. The reconciler business logic got triggered by adding this HelloWorld manifest
+
+/// details | Hello World manifest
+
+```yaml
+--8<--
+https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/in/example.com.helloworlds.test.yaml
+--8<--
+```
+
+///
+
+let's see if it performed its job, by looking at the details of the HelloWorld manifest
+
+```
+choreoctl get helloworlds.example.com test -o yaml
+```
+
+We should see spec.greeting being changed to `hello choreo`
+
+```yaml
+apiVersion: example.com/v1alpha1
+kind: HelloWorld
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-09-30T17:49:34Z"
+  generation: 1
+  name: test
+  namespace: default
+  resourceVersion: "1"
+  uid: deedbf64-b348-477e-9fbb-d2738ab4f3b0
+spec:
+  greeting: hello choreo
+status:
+  conditions:
+  - lastTransitionTime: "2024-09-30T17:49:34Z"
+    message: ""
+    reason: Ready
+    status: "True"
+    type: Ready
+```
+
+🎉 You ran you first choreo reconciler. 🤘
+
+Did you notice none of this required a kubernetes cluster?
+Choreo applies the kubernetes principles w/o imposing all the kubernetes container orchestration primitives.
+
+Try changing the business logic from `Hello Choreo` to `hello <your name>` and execute the business logic again
+
+```python
+def reconcile(helloworld):
+  spec = helloworld.get("spec", {})
+  spec["greeting"] = "hello wim"
+  helloworld['spec'] = spec
+  return reconcile_result(helloworld, False, 0, conditionType, "", False)
+```
+
+This should result in the following outcome if we run the business logic again.
+
+```
+choreoctl run once
+```
+
+```yaml
+apiVersion: example.com/v1alpha1
+kind: HelloWorld
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: "2024-09-30T17:49:34Z"
+  generation: 1
+  name: test
+  namespace: default
+  resourceVersion: "1"
+  uid: deedbf64-b348-477e-9fbb-d2738ab4f3b0
+spec:
+  greeting: hello wim
+status:
+  conditions:
+  - lastTransitionTime: "2024-09-30T17:49:34Z"
+    message: ""
+    reason: Ready
+    status: "True"
+    type: Ready
+```
+
+You can also introduce an error and see what happens; e.g. change `greeting` to `greetings` which is an invalid json key.
+
+```python
+def reconcile(helloworld):
+  spec = helloworld.get("spec", {})
+  spec["greetings"] = "hello wim"
+  helloworld['spec'] = spec
+  return reconcile_result(helloworld, False, 0, conditionType, "", False)
+```
+
+when executing
+
+```
+choreoctl run once
+```
+
+the following result is obtained, indicating the schema error
+
+```bash
+execution failed example.com.helloworlds.helloworld.HelloWorld.example.com.test rpc error: code = InvalidArgument desc = fieldmanager apply failed err: failed to create typed patch object (default/test; example.com/v1alpha1, Kind=HelloWorld): .spec.greetings: field not declared in schema
 ```
