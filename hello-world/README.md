@@ -150,11 +150,11 @@ Choreo applies the kubernetes principles w/o imposing all the kubernetes contain
 Try changing the business logic from `Hello Choreo` to `hello <your name>` and execute the business logic again
 
 ```python
-def reconcile(helloworld):
-  spec = helloworld.get("spec", {})
-  spec["greeting"] = "hello wim"
-  helloworld['spec'] = spec
-  return reconcile_result(helloworld, False, 0, conditionType, "", False)
+def reconcile(self):
+  spec = self.get("spec", {})
+  spec["greeting"] = "hello me"
+  self['spec'] = spec
+  return reconcile_result(self, False, 0, conditionType, "", False)
 ```
 
 This should result in the following outcome if we run the business logic again.
@@ -189,11 +189,11 @@ status:
 You can also introduce an error and see what happens; e.g. change `greeting` to `greetings` which is an invalid json key in the schema.
 
 ```python
-def reconcile(helloworld):
-  spec = helloworld.get("spec", {})
-  spec["greetings"] = "hello wim"
-  helloworld['spec'] = spec
-  return reconcile_result(helloworld, False, 0, conditionType, "", False)
+def reconcile(self):
+  spec = self.get("spec", {})
+  spec["greetings"] = "hello me"
+  self['spec'] = spec
+  return reconcile_result(self, False, 0, conditionType, "", False)
 ```
 
 when executing

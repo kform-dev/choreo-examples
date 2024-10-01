@@ -1,6 +1,6 @@
 # choreo examples
 
-This exercise will walk through a basic Hello world example. The API is already generated
+This exercise will walk through a the Greeing example. The API(s)/Resources are already generated
 
 This exercise will walk through a basic Hello world example. The API is already generated
 
@@ -17,10 +17,10 @@ Best to use 2 windows, one for the choreo server and one for the choreo client, 
 start the choreoserver
 
 ```
-choreoctl server start choreo-examples/hello-world/
+choreoctl server start choreo-examples/greeting/
 ```
 
-The choreoserver support a version controlled backend but we dont explore this in this exercise.
+The choreoserver support a version controlled backend but we don't explore this in this exercise.
 
 ```json
 {"time":"2024-09-30T19:26:06.771564+02:00","level":"INFO","message":"server started","logger":"choreoctl-logger","data":{"name":"choreoServer","address":"127.0.0.1:51000"}}
@@ -36,12 +36,13 @@ choreoctl api-resources
 ```
 
 ```bash
+&{customresourcedefinitions apiextensions.k8s.io v1 CustomResourceDefinition  false []}
 &{upstreamrefs choreo.kform.dev v1alpha1 UpstreamRef  false [pkg knet]}
 &{libraries choreo.kform.dev v1alpha1 Library  false [choreo]}
 &{apiresources choreo.kform.dev v1alpha1 APIResources  true []}
 &{configgenerators choreo.kform.dev v1alpha1 ConfigGenerator  false [pkg knet]}
-&{customresourcedefinitions apiextensions.k8s.io v1 CustomResourceDefinition  false []}
 &{reconcilers choreo.kform.dev v1alpha1 Reconciler  false [choreo]}
+&{greetings example.com v1alpha1 Greeting GreetingList true []}
 &{helloworlds example.com v1alpha1 HelloWorld HelloWorldList true []}
 ```
 
@@ -64,7 +65,7 @@ you should see the reconciler `example.com.helloworlds.helloworld` being execute
 ```
 execution success, time(sec) 0.0031725
 Reconciler                         Start Stop Requeue Error
-example.com.helloworlds.helloworld     2    2       0     0
+example.com.helloworlds.helloworld     3    3       0     0
 ```
 
 What just happened?
@@ -75,7 +76,7 @@ a. the reconciler got loaded
 
 ```yaml
 --8<--
-https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/reconcilers/example.com.helloworlds.helloworld.star
+https://raw.githubusercontent.com/kform-dev/choreo-examples/main/greeting/reconcilers/example.com.helloworlds.helloworld.star
 --8<--
 ```
 
@@ -93,7 +94,7 @@ b. The reconciler registered to be informed on any HelloWorld resource change
 
 ```yaml
 --8<--
-https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/reconcilers/example.com.helloworlds.helloworld.yaml
+https://raw.githubusercontent.com/kform-dev/choreo-examples/main/greeting/reconcilers/example.com.helloworlds.helloworld.yaml
 --8<--
 ```
 
@@ -105,7 +106,7 @@ c. The reconciler business logic got triggered by adding this HelloWorld manifes
 
 ```yaml
 --8<--
-https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/in/example.com.helloworlds.test.yaml
+https://raw.githubusercontent.com/kform-dev/choreo-examples/main/greeting/in/example.com.helloworlds.test.yaml
 --8<--
 ```
 
@@ -117,35 +118,41 @@ let's see if it performed its job, by looking at the details of the HelloWorld m
 choreoctl get helloworlds.example.com test -o yaml
 ```
 
-We should see spec.greeting being changed to `hello choreo`
+We should see a new resource being generated
 
 ```yaml
 apiVersion: example.com/v1alpha1
-kind: HelloWorld
+kind: Greeting
 metadata:
-  annotations:
-    api.choreo.kform.dev/origin: '{"kind":"File"}'
-  creationTimestamp: "2024-09-30T17:49:34Z"
+  creationTimestamp: "2024-10-01T05:45:08Z"
   generation: 1
+  managedFields:
+  - apiVersion: example.com/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:ownerReferences:
+          k:{"uid":"8cad289b-7e68-42b0-a864-a1369414b401"}: {}
+      f:spec:
+        f:message: {}
+    manager: example.com.helloworlds.helloworld
+    operation: Apply
+    time: "2024-10-01T05:45:57Z"
   name: test
   namespace: default
+  ownerReferences:
+  - apiVersion: example.com/v1alpha1
+    controller: true
+    kind: HelloWorld
+    name: test
+    uid: 8cad289b-7e68-42b0-a864-a1369414b401
   resourceVersion: "1"
-  uid: deedbf64-b348-477e-9fbb-d2738ab4f3b0
+  uid: e0dd1952-2f97-4090-a170-53460860f0fb
 spec:
-  greeting: hello choreo
-status:
-  conditions:
-  - lastTransitionTime: "2024-09-30T17:49:34Z"
-    message: ""
-    reason: Ready
-    status: "True"
-    type: Ready
+  message: hi
 ```
 
-🎉 You ran you first choreo reconciler. 🤘
-
-Did you notice none of this required a kubernetes cluster?
-Choreo applies the kubernetes principles w/o imposing all the kubernetes container orchestration primitives.
+🎉 You have generated a greeting resource from the hello world resource. 🤘
 
 Try changing the business logic from `Hello Choreo` to `hello <your name>` and execute the business logic again
 
