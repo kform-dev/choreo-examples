@@ -40,4 +40,4 @@ def getGreeting(helloworld):
 
 def getGreetingMsg(self):
   spec = getSpec(self)
-  return spec.get("greeting", "hi choreo, how are you")
+  return spec.get("greeting", "hi choreo, how are you?")
