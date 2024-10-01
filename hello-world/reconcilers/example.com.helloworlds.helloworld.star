@@ -1,8 +1,10 @@
-finalizer = "example.com/ready"
+finalizer = "helloworld.example.com/ready"
 conditionType = "Ready"
 
-def reconcile(helloworld):
-  spec = helloworld.get("spec", {})
+def reconcile(self):
+  # self = helloworld
+
+  spec = self.get("spec", {})
   spec["greeting"] = "hello choreo"
-  helloworld['spec'] = spec
-  return reconcile_result(helloworld, False, 0, conditionType, "", False)
+  self['spec'] = spec
+  return reconcile_result(self, False, 0, conditionType, "", False)

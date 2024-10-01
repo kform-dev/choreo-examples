@@ -1,0 +1,13 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+# name can be inferred from the filename or from the for resource
+spec: 
+  for: 
+    group: example.com
+    version: v1alpha1
+    kind: HelloWorld
+    selector: {}
+  owns:
+  - group: example.com
+    version: v1alpha1
+    kind: Greeting
