@@ -1,8 +1,34 @@
 # choreo examples
 
-This exercise will walk through a the Greeing example. The API(s)/Resources are already generated
+This exercise will walk through a basic Hello world example, which focusses on customizing a resource through some basic business logic. The Hello World API is already generated.
 
-This exercise will walk through a basic Hello world example. The API is already generated
+## Hello world resource (API)
+
+```golang
+// HelloWorldSpec defines the desired state of the HelloWorld
+type HelloWorldSpec struct {
+	Greeting string `json:"greeting,omitempty" protobuf:"bytes,1,opt,name=greeting"`
+}
+
+// HelloWorldStatus defines the state of the HelloWorld resource
+type HelloWorldStatus struct {
+	// ConditionedStatus provides the status of the resource using conditions
+	// - a ready condition indicates the overall status of the resource
+	ConditionedStatus `json:",inline" yaml:",inline" protobuf:"bytes,1,opt,name=conditionedStatus"`
+}
+
+// +kubebuilder:object:root=true
+// HelloWorld defines the HelloWorld API
+type HelloWorld struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	Spec HelloWorldSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status HelloWorldStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+}
+```
+
+## getting started
 
 clone the choreo-examples git repo
 
