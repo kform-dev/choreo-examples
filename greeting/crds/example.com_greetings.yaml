@@ -37,13 +37,14 @@ spec:
           metadata:
             type: object
           spec:
-            description: HelloWorldSpec defines the desired state of the HelloWorld
+            description: GreetingsSspec defines the desired state of the Greetings
+              resource
             properties:
-              greeting:
+              message:
                 type: string
             type: object
           status:
-            description: HelloWorldStatus defines the state of the HelloWorld resource
+            description: GreetingsStatus defines the state of the Greeting resource
             properties:
               conditions:
                 description: Conditions of the resource.
