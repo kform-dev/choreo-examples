@@ -1,0 +1,11 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: UpstreamRef
+metadata:
+  name: greeting
+spec:
+  url: https://github.com/kform-dev/choreo-examples.git
+  directory: greeting-ref
+  ref:
+    type: hash
+    name: ccc7b0ab55917eb7ade349e6ea13b3a3f8356710
+  
