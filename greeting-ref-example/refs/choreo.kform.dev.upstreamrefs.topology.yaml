@@ -7,5 +7,5 @@ spec:
   directory: greeting-ref
   ref:
     type: hash
-    name: 801b118989f3127f3ceea9e8f91f96a1d4eb4986
+    name: f90ee1ae44bd6a1568e9d5f5e9d2ea1850de6693
   
