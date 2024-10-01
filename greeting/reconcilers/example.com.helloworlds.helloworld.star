@@ -1,4 +1,4 @@
-load("api.k8s.io.object.star", "getName", "getNamespace", "getDeletionTimestamp", "delFinalizer", "setFinalizer")
+load("api.k8s.io.object.star", "getName", "getNamespace", "getDeletionTimestamp", "delFinalizer", "setFinalizer", "getSpec")
 
 finalizer = "greeting.example.com/ready"
 conditionType = "Ready"
