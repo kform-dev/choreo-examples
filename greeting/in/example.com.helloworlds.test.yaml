@@ -4,4 +4,4 @@ metadata:
   name: test
   namespace: default
 spec:
-  greeting: hellow choreo
+  greeting: hello choreo

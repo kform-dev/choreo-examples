@@ -1,8 +1,22 @@
 # choreo examples
 
-This exercise will walk through a basic Hello world example. The API is already generated
+The goal of this exercise is to show you the basics of choreo and how you can customize the business logic using a hello world example. The Hello World API is already generated from this [source][#Hello world resource (API)]
 
-This exercise will walk through a basic Hello world example. The API is already generated
+
+## getting started
+
+/// tab | Codespaces
+
+run the environment in codespaces
+
+```bash
+https://codespaces.new/kform-dev/choreo-examples
+```
+
+///
+
+
+/// tab | local environment
 
 clone the choreo-examples git repo
 
@@ -10,13 +24,15 @@ clone the choreo-examples git repo
 git clone https://github.com/kform-dev/choreo-examples
 ```
 
+///
+
 Best to use 2 windows, one for the choreo server and one for the choreo client, since the choreo server will serve the system
 
 ## choreo server
 
 start the choreoserver
 
-```
+```bash
 choreoctl server start choreo-examples/hello-world/
 ```
 
@@ -47,15 +63,15 @@ choreoctl api-resources
 
 When executing the following command no result should be shown, since no hello world resources are loaded
 
-```
-choreoctl get customresourcedefinitions.apiextensions.k8s.io
+```bash
+choreoctl get helloworlds.example.com
 ```
 
 Autocompletion should work, maybe try TAB completion iso copying the full command
 
 Now run the reconciler
 
-```
+```bash
 choreoctl run once
 ```
 
@@ -147,7 +163,7 @@ status:
 Did you notice none of this required a kubernetes cluster?
 Choreo applies the kubernetes principles w/o imposing all the kubernetes container orchestration primitives.
 
-Try changing the business logic from `Hello Choreo` to `hello <your name>` and execute the business logic again
+Try changing the business logic from `Hello choreo` to `hello <your name>` and execute the business logic again
 
 ```python
 def reconcile(self):
@@ -159,7 +175,7 @@ def reconcile(self):
 
 This should result in the following outcome if we run the business logic again.
 
-```
+```bash
 choreoctl run once
 ```
 
@@ -206,4 +222,30 @@ the following result is obtained, indicating the schema error
 
 ```bash
 execution failed example.com.helloworlds.helloworld.HelloWorld.example.com.test rpc error: code = InvalidArgument desc = fieldmanager apply failed err: failed to create typed patch object (default/test; example.com/v1alpha1, Kind=HelloWorld): .spec.greetings: field not declared in schema
+```
+
+## Hello world resource (API)
+
+```golang
+// HelloWorldSpec defines the desired state of the HelloWorld
+type HelloWorldSpec struct {
+	Greeting string `json:"greeting,omitempty" protobuf:"bytes,1,opt,name=greeting"`
+}
+
+// HelloWorldStatus defines the state of the HelloWorld resource
+type HelloWorldStatus struct {
+	// ConditionedStatus provides the status of the resource using conditions
+	// - a ready condition indicates the overall status of the resource
+	ConditionedStatus `json:",inline" yaml:",inline" protobuf:"bytes,1,opt,name=conditionedStatus"`
+}
+
+// +kubebuilder:object:root=true
+// HelloWorld defines the HelloWorld API
+type HelloWorld struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
+	Spec HelloWorldSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Status HelloWorldStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+}
 ```
