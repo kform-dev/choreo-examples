@@ -37,7 +37,7 @@ def reconcile(self):
     if rsp["error"] != None:
       return reconcile_result(self, True, 0, conditionType, rsp["error"], rsp["fatal"])
   
-  subInterfaces, err = getSubInterfaces(self, networkDesign)
+  subInterfaces, err = getSubInterfaces(self, ipindex)
   if err != None:
     return reconcile_result(self, True, 0, conditionType, err, False)
   for subItfce in subInterfaces:
