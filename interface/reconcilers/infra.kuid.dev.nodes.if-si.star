@@ -82,7 +82,7 @@ def getSubInterfaces(self, ipindex):
       spec[key] = val
   spec["type"] = "routed"
   spec["id"] = id
-  for af, enable in getEnabledAFs(ipindex).items():
+  for af, enabled in getEnabledAFs(ipindex).items():
     if enabled:
       afaddrs = {}
       afaddrs["addresses"] = []
