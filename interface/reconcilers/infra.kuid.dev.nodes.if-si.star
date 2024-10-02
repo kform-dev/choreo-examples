@@ -82,14 +82,15 @@ def getSubInterfaces(self, ipindex):
       spec[key] = val
   spec["type"] = "routed"
   spec["id"] = id
-  for af in getEnabledAFs(ipindex):
-    afaddrs = {}
-    afaddrs["addresses"] = []
-    address, err = getIPClaimedAddress(genNodeIDString(nodeID) + "." + af, namespace) 
-    if err != None:
-      return None, err
-    afaddrs["addresses"].append(address)
-    spec[af] = afaddrs
+  for af, enable in getEnabledAFs(ipindex).items():
+    if enabled:
+      afaddrs = {}
+      afaddrs["addresses"] = []
+      address, err = getIPClaimedAddress(genNodeIDString(nodeID) + "." + af, namespace) 
+      if err != None:
+        return None, err
+      afaddrs["addresses"].append(address)
+      spec[af] = afaddrs
   
   subinterfaces.append(getSubInterface(siName, namespace, spec))
   return subinterfaces, None
