@@ -45,7 +45,7 @@ def getEnabledAFs(ipindex):
       afs["ipv4"] = True
     if isIPv6(getPrefixPrefix(prefix)):
       afs["ipv6"] = True
-  return ipclaims
+  return afs
 
 def getIPIndexIPClaims(ipindex, parentName):
   ipclaims = []
