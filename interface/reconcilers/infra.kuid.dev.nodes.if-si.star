@@ -4,7 +4,7 @@ load("id.kuid.dev.ids.star", "getEndpointID", "genEndpointIDString")
 load("device.network.kubenet.dev.interfaces.star", "getInterfaceSpec", "getInterface")
 load("device.network.kubenet.dev.subinterfaces.star", "getSubInterface")
 load("ipam.be.kuid.dev.ipclaims.star", "getIPClaimedAddress")
-load("ipam.be.kuid.dev.ipindices.star", "getIPIndexInstance", "getIPIndexIPClaims")
+load("ipam.be.kuid.dev.ipindices.star", "getIPIndexInstance", "getEnabledAFs")
 
 finalizer = "node.infra.kuid.dev/itfce"
 conditionType = "InterfaceReady"
