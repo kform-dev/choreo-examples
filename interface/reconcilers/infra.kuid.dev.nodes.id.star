@@ -1,6 +1,6 @@
 load("api.k8s.io.object.star", "getName", "getNamespace", "getDeletionTimestamp", "delFinalizer", "setFinalizer")
 load("infra.kuid.dev.nodes.star", "getPartition")
-load("ipam.be.kuid.dev.ipindices.star", "getIPIndexInstance", "getIPClaims")
+load("ipam.be.kuid.dev.ipindices.star", "getIPIndexInstance", "getIPIndexIPClaims")
 
 finalizer = "node.infra.kuid.dev/ids"
 conditionType = "IPClaimReady"
@@ -26,7 +26,7 @@ def reconcile(self):
     # we dont return the error but wait for the network design retrigger
     return reconcile_result(self, False, 0, conditionType, err, False)
         
-  ipClaims = getIPIndexIPClaims(self, name)
+  ipClaims = getIPIndexIPClaims(ipindex, name)
   for ipClaim in ipClaims:
     rsp = client_create(ipClaim)
     if rsp["error"] != None:

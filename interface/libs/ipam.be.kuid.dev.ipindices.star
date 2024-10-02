@@ -15,8 +15,11 @@ def getPrefixes(ipindex):
   spec = ipindex.get("spec", {})
   return spec.get("prefixes", [])
 
+def getPrefixPrefix(prefix):
+  return prefix.get("prefix", "")
+
 def getPrefixType(prefix):
-  return prefix.get("prefixTYpe", "agagregate")
+  return prefix.get("prefixType", "aggregate")
 
 def getLabels(prefix):
   return prefix.get("labels", {})
@@ -32,24 +35,32 @@ def getIPIndex(name, namespace, spec):
     "spec": spec,
   }
 
+def getEnabledAFs(ipindex):
+  afs = {
+    "ipv4": False,
+    "ipv6": False,
+  }
+   for prefix in getPrefixes(ipindex):
+    if isIPv4(getPrefixPrefix(prefix)):
+      afs["ipv4"] = True
+    if isIPv6(getPrefixPrefix(prefix)):
+      afs["ipv6"] = True
+  return ipclaims
+
 def getIPIndexIPClaims(ipindex, parentName):
   ipclaims = []
   namespace = getNamespace(ipindex)
   ipIndexName = getName(ipindex)
 
-  for prefix in getPrefixes(ipindex):
-    af = "ipv6"
-    if isIPv4(index, prefix):
-      af = "ipv4"
-    labels = getLabels(prefix)
+  for af in getEnabledAFs(afs):
+    labels = {}
     labels["ipam.be.kuid.dev/address-family"] = af
-
     ipclaims.append(getIPClaim(parentName + "." + af, namespace, getIPIndexIPClaimSpec(ipIndexName, getPrefixType(prefix), labels)))
   return ipclaims
 
 def getIPIndexIPClaimSpec(ipindexName, ipPrefixType, labels):
   return {
-        "index": ipIndexName,
+        "index": ipindexName,
         "prefixType": ipPrefixType,
         "selector": {
           "matchLabels": labels,
