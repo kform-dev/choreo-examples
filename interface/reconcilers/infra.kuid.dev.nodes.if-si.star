@@ -1,6 +1,6 @@
 load("api.k8s.io.object.star", "getName", "getNamespace", "getDeletionTimestamp", "delFinalizer", "setFinalizer")
 load("infra.kuid.dev.nodes.star", "getPartition", "getNodeID")
-load("id.kuid.dev.ids.star", "getEndpointID", "genEndpointIDString")
+load("id.kuid.dev.ids.star", "getEndpointID", "genEndpointIDString", "genNodeIDString")
 load("device.network.kubenet.dev.interfaces.star", "getInterfaceSpec", "getInterface")
 load("device.network.kubenet.dev.subinterfaces.star", "getSubInterface")
 load("ipam.be.kuid.dev.ipclaims.star", "getIPClaimedAddress")
@@ -83,7 +83,7 @@ def getSubInterfaces(self, ipindex):
   spec["type"] = "routed"
   spec["id"] = id
   for af in getEnabledAFs():
-    address, err = getIPClaimedAddress(ipClaimName, namespace) 
+    address, err = getIPClaimedAddress(genNodeIDString() + "." + af, namespace) 
     if err != None:
       return None, err
     spec[af] = address
