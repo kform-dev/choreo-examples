@@ -55,7 +55,7 @@ def getIPIndexIPClaims(ipindex, parentName):
   for af in getEnabledAFs(ipindex):
     labels = {}
     labels["ipam.be.kuid.dev/address-family"] = af
-    ipclaims.append(getIPClaim(parentName + "." + af, namespace, getIPIndexIPClaimSpec(ipIndexName, getPrefixType(prefix), labels)))
+    ipclaims.append(getIPClaim(parentName + "." + af, namespace, getIPIndexIPClaimSpec(ipIndexName, "pool", labels)))
   return ipclaims
 
 def getIPIndexIPClaimSpec(ipindexName, ipPrefixType, labels):
