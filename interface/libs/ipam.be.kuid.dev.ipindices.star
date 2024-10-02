@@ -52,10 +52,11 @@ def getIPIndexIPClaims(ipindex, parentName):
   namespace = getNamespace(ipindex)
   ipIndexName = getName(ipindex)
 
-  for af in getEnabledAFs(ipindex):
-    labels = {}
-    labels["ipam.be.kuid.dev/address-family"] = af
-    ipclaims.append(getIPClaim(parentName + "." + af, namespace, getIPIndexIPClaimSpec(ipIndexName, "pool", labels)))
+  for af, enabled in getEnabledAFs(ipindex).items():
+    if enabled:
+      labels = {}
+      labels["ipam.be.kuid.dev/address-family"] = af
+      ipclaims.append(getIPClaim(parentName + "." + af, namespace, getIPIndexIPClaimSpec(ipIndexName, "pool", labels)))
   return ipclaims
 
 def getIPIndexIPClaimSpec(ipindexName, ipPrefixType, labels):
