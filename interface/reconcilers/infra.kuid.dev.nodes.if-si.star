@@ -82,7 +82,7 @@ def getSubInterfaces(self, ipindex):
       spec[key] = val
   spec["type"] = "routed"
   spec["id"] = id
-  for af in getEnabledAFs():
+  for af in getEnabledAFs(ipindex):
     address, err = getIPClaimedAddress(genNodeIDString() + "." + af, namespace) 
     if err != None:
       return None, err
