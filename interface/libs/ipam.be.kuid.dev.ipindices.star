@@ -40,7 +40,7 @@ def getEnabledAFs(ipindex):
     "ipv4": False,
     "ipv6": False,
   }
-   for prefix in getPrefixes(ipindex):
+  for prefix in getPrefixes(ipindex):
     if isIPv4(getPrefixPrefix(prefix)):
       afs["ipv4"] = True
     if isIPv6(getPrefixPrefix(prefix)):
