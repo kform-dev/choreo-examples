@@ -83,10 +83,12 @@ def getSubInterfaces(self, ipindex):
   spec["type"] = "routed"
   spec["id"] = id
   for af in getEnabledAFs(ipindex):
+    addresses["addresses"] = []
     address, err = getIPClaimedAddress(genNodeIDString(nodeID) + "." + af, namespace) 
     if err != None:
       return None, err
-    spec[af] = address
+    addresses["addresses"].append(address)
+    spec[af] = addresses
   
   subinterfaces.append(getSubInterface(siName, namespace, spec))
   return subinterfaces, None
