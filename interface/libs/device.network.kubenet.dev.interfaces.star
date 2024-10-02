@@ -1,6 +1,3 @@
-load("id.kuid.dev.ids.star", "genEndpointIDString")
-load("infra.kuid.dev.endpoints.star", "getEndpointSpeed")
-
 def getInterfaceSpec(epID):
   spec = {}
   for key, val in epID.items():
