@@ -27,8 +27,7 @@ def getFinalizers(self):
 
 def setFinalizers(self, finalizers):
   metadata = getMetadata(self)
-  if getDeletionTimestamp(self) == None:
-    metadata["finalizers"] = finalizers
+  metadata["finalizers"] = finalizers
 
 def setFinalizer(self, finalizer):
   found = False
