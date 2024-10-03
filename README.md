@@ -6,6 +6,11 @@ https://codespaces.new/kform-dev/choreo-examples
 
 or clone the repo
 
-example 1 [hello world](./hello-world/README.md)
-example 2 [greeting](./greeting/README.md)
-example 3 [greeting-ref-example](./greeting-ref-example/README.md)
+git clone https://github.com/kform-dev/choreo-examples
+
+## examples
+
+- [hello world](./hello-world/README.md)
+- [greeting](./greeting/README.md)
+- [greeting-ref-example](./greeting-ref-example/README.md)
+- [interface](./interface/README.md)
