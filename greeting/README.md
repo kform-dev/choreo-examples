@@ -2,13 +2,12 @@
 
 assumption is you continue from the hello workd example
 
-The goal of this exercise is to show you can generate a new resource from a top resource. Secondly we want to show you the use of libraries where you can store reusable components and libraries you can leverage in various reconcilers.
-
+The goal of this exercise is to show you can generate a new resource from a top resource. 
 In this example we create a `Greeting` resource from the `Helloworld` resource. 
 
 ## reconciler changes
 
-The reconciler got some new extensions to hook into the system. Basides the for, you now also see the owns registration of the greeting resource. This basically tell the system that this reconciler can generate the `Greeting` resource.
+The reconciler got some new extensions to hook into the system. Besides the `for`, you now also see the `owns` registration of the greeting resource. This basically tell the system that this reconciler can generate the `Greeting` resource.
 
 ```yaml
 spec: 
@@ -27,8 +26,8 @@ spec:
 
 start the choreoserver
 
-```
-choreoctl server start choreo-examples/greeting
+```bash
+choreoctl server start greeting
 ```
 
 The choreoserver support a version controlled backend but we don't explore this in this exercise.
@@ -40,7 +39,7 @@ branchstore update main oldstate <nil> -> newstate CheckedOut
 
 ## choreo client
 
-With the following command we can explore the api(s) supported by the system. We see the helloworlds api being present, which got loaded when we started the server
+With the following command we can explore the api(s) supported by the system. We see the `helloworlds` and `greetings` api being present. These resources got loaded when the api-server started.
 
 ```bash
 choreoctl api-resources
@@ -81,7 +80,7 @@ example.com.helloworlds.helloworld     3    3       0     0
 
 let's see if it performed its job, by looking at the details of the HelloWorld manifest
 
-```
+```bash
 choreoctl get helloworlds.example.com test -o yaml
 ```
 

@@ -50,7 +50,7 @@ choreoctl api-resources
 
 ## running the business logic
 
-```
+```bash
 chorectl run once
 ```
 

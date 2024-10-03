@@ -33,7 +33,7 @@ Best to use 2 windows, one for the choreo server and one for the choreo client, 
 start the choreoserver
 
 ```bash
-choreoctl server start choreo-examples/hello-world/
+choreoctl server start hello-world
 ```
 
 The choreoserver support a version controlled backend (git) but we don't explore this in this exercise.
@@ -45,7 +45,9 @@ branchstore update main oldstate <nil> -> newstate CheckedOut
 
 ## choreo client
 
-With the following command we can explore the api(s) supported by the system. We see the helloworlds api being present, which got loaded when we started the server
+With the following command we can explore the api(s) supported by the system. We see the `helloworlds` api being present. Choreo comes with some built in apis and can be extended with your own customized apis (CRDs).
+
+These API(s) got loaded when the server started.
 
 ```bash
 choreoctl api-resources
@@ -77,7 +79,7 @@ choreoctl run once
 
 you should see the reconciler `example.com.helloworlds.helloworld` being executed.
 
-```
+```bash
 execution success, time(sec) 0.0031725
 Reconciler                         Start Stop Requeue Error
 example.com.helloworlds.helloworld     2    2       0     0
@@ -129,7 +131,7 @@ https://raw.githubusercontent.com/kform-dev/choreo-examples/main/hello-world/in/
 
 let's see if it performed its job, by looking at the details of the HelloWorld manifest
 
-```
+```bash
 choreoctl get helloworlds.example.com test -o yaml
 ```
 
@@ -192,7 +194,7 @@ metadata:
   resourceVersion: "1"
   uid: deedbf64-b348-477e-9fbb-d2738ab4f3b0
 spec:
-  greeting: hello wim
+  greeting: hello me
 status:
   conditions:
   - lastTransitionTime: "2024-09-30T17:49:34Z"
@@ -214,7 +216,7 @@ def reconcile(self):
 
 when executing
 
-```
+```bash
 choreoctl run once
 ```
 
