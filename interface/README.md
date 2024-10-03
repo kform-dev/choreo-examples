@@ -37,7 +37,6 @@ spec:
   site: us-east
 ```
 
-
 ## starting the choreoserver
 
 Let's start the choreo server with the -r flag. The -r flags enables some internal resources which can be used to claim IP(s), etc
@@ -97,7 +96,7 @@ chorectl run once
 check if we get the proper result based on the input.
 
 ```bash
-choreoctl get greetings.example.com test -o yaml
+choreoctl get subinterfaces.device.network.kubenet.dev -o yaml
 ```
 
 
@@ -109,8 +108,7 @@ items:
 - apiVersion: device.network.kubenet.dev/v1alpha1
   kind: SubInterface
   metadata:
-    creationTimestamp: "2024-10-03T04:36:11Z"
-    generation: 4
+    creationTimestamp: "2024-10-03T07:04:39Z"
     name: kubenet.region1.us-east.node1.0.0.system.0
     namespace: default
     ownerReferences:
@@ -118,9 +116,9 @@ items:
       controller: true
       kind: Node
       name: kubenet.region1.us-east.node1
-      uid: b8639e8f-1168-4dfa-b9fb-c443b33e01cf
-    resourceVersion: "4"
-    uid: c5264cad-e71e-41a6-8825-dd64e48fe0da
+      uid: 7b96591b-452e-458d-a8f5-ea26147c8b67
+    resourceVersion: "0"
+    uid: fb5b3aad-98f5-40e4-8ced-605e182111e7
   spec:
     endpoint: 0
     id: 0

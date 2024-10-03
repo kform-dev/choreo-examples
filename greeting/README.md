@@ -3,7 +3,7 @@
 assumption is you continue from the hello workd example
 
 The goal of this exercise is to show you can generate a new resource from a top resource. 
-In this example we create a `Greeting` resource from the `Helloworld` resource. 
+In this example we create a `Greeting` resource from the `Helloworld` resource.
 
 ## reconciler changes
 
@@ -121,7 +121,7 @@ spec:
 Look at the owner reference. You see Greeting is owned by HelloWorld. Lets check the dependencies
 
 ```bash
-chorectl deps
+choreoctl deps
 ```
 
 ```bash
