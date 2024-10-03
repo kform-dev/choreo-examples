@@ -1,4 +1,4 @@
-# choreo examples
+# choreo HelloWorld example
 
 The goal of this exercise is to show you the basics of choreo and how you can customize the business logic using a hello world example. The Hello World API is already generated from this [source][#Hello world resource (API)]
 
@@ -36,7 +36,7 @@ start the choreoserver
 choreoctl server start choreo-examples/hello-world/
 ```
 
-The choreoserver support a version controlled backend but we dont explore this in this exercise.
+The choreoserver support a version controlled backend (git) but we don't explore this in this exercise.
 
 ```json
 {"time":"2024-09-30T19:26:06.771564+02:00","level":"INFO","message":"server started","logger":"choreoctl-logger","data":{"name":"choreoServer","address":"127.0.0.1:51000"}}

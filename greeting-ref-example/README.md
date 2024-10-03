@@ -1,6 +1,6 @@
-# choreo examples
+# choreo GreetingRef example
 
-assumption is you continue from the greeting example
+Assumption is you continue from the greeting example
 
 The goal of this exercise is to show how you can reference code or data from a blueprint example. As such you build more reusable code that can be leveraaged amongst various projects.
 

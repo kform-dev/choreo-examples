@@ -1,4 +1,4 @@
-# choreo examples
+# choreo Greeting example
 
 assumption is you continue from the hello workd example
 
