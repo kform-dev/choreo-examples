@@ -10,7 +10,8 @@ git clone https://github.com/kform-dev/choreo-examples
 
 ## examples
 
-- [hello world](./hello-world/README.md)
-- [greeting](./greeting/README.md)
-- [greeting-ref-example](./greeting-ref-example/README.md)
-- [interface](./interface/README.md)
+- [Hello world](./hello-world/README.md)
+- [Greeting](./greeting/README.md)
+- [Greeting-ref-example](./greeting-ref-example/README.md)
+- [Interface](./interface/README.md)
+- [Config gotemplates](./config/README.md)
