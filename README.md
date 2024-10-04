@@ -14,5 +14,5 @@ git clone https://github.com/kform-dev/choreo-examples
 - [Greeting](./greeting/README.md)
 - [Greeting-ref-example](./greeting-ref-example/README.md)
 - [Interface](./interface/README.md)
-- [Config go templates](./config-gotempl/README.md)
-- [Config jinja2 templates](./config-jinja2templ/README.md)
+- [Config using go templates](./config-gotempl/README.md)
+- [Config using jinja2 templates](./config-jinja2templ/README.md)
