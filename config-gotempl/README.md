@@ -1,4 +1,4 @@
-# choreo Config example
+# choreo Config Go Template example
 
 This exercise build from the interface example. Besides creating a `Interface` and `SubInterface` object using the python reconcilers we also generate a device specific `Config` resource for the interface and subinterface that represents a Nokia SRL specific device config. We use go templates to render the device specific configs in this exercise. Besides `python` also `gotemplate` based reconcilers are used in this exercise.
 
