@@ -42,7 +42,7 @@ spec:
 Let's start the choreo server with the -r flag. The -r flags enables some internal resources which can be used to claim IP(s), etc
 
 ```bash
-choreoctl server run interface -r
+choreoctl server start interface -r
 ```
 
 ## api resources

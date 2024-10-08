@@ -4,9 +4,9 @@ metadata:
   namespace: default
   name: kubenet.region1.us-east.node2
 spec:
-  node: node2
   partition: kubenet
-  platformType: ixrd3
-  provider: srlinux.nokia.com
   region: region1
   site: us-east
+  node: node2
+  provider: srlinux.nokia.com
+  platformType: ixrd3
