@@ -42,7 +42,7 @@ spec:
 Let's start the choreo server with the -r flag. The -r flags enables some internal resources which can be used to claim IP(s), etc
 
 ```bash
-choreoctl server start config-jinja2templating -r
+choreoctl server start config-jinja2templ -r
 ```
 
 ## api resources
