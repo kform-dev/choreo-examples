@@ -1,0 +1,47 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: infra.kuid.dev.nodes.id
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\")\nload(\"infra.kuid.dev.nodes.star\",
+      \"getPartition\")\nload(\"ipam.be.kuid.dev.ipindices.star\", \"getIPIndexInstance\",
+      \"getIPIndexIPClaims\")\n\nfinalizer = \"node.infra.kuid.dev/ids\"\nconditionType
+      = \"IPClaimReady\"\n\ndef reconcile(self):\n  # self is node\n  name = getName(self)\n
+      \ namespace = getNamespace(self)\n  partition = getPartition(self)\n\n  if getDeletionTimestamp(self)
+      != None:\n    rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n
+      \   \n    delFinalizer(self, finalizer)\n    return reconcile_result(self, False,
+      0, conditionType, \"\", False)\n\n  setFinalizer(self, finalizer)\n\n  ipindex,
+      err = getIPIndexInstance(partition + \".\" + \"default\", namespace)\n  if err
+      != None:\n    # we dont return the error but wait for the network design retrigger\n
+      \   return reconcile_result(self, False, 0, conditionType, err, False)\n        \n
+      \ ipClaims = getIPIndexIPClaims(ipindex, name)\n  for ipClaim in ipClaims:\n
+      \   rsp = client_create(ipClaim)\n    if rsp[\"error\"] != None:\n        return
+      reconcile_result(self, True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n\n
+      \ rsp = client_apply()\n  if rsp[\"error\"] != None:\n    return reconcile_result(self,
+      True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n  return reconcile_result(self,
+      False, 0, conditionType, \"\", False)\n"
+  for:
+    group: infra.kuid.dev
+    kind: Node
+    selector: {}
+    version: v1alpha1
+  owns:
+  - group: ipam.be.kuid.dev
+    kind: IPClaim
+    version: v1alpha1
+  type: starlark
+  watches:
+  - group: ipam.be.kuid.dev
+    kind: IPIndex
+    selector:
+      match:
+        metadata.name: kubenet.default
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"
+    version: v1alpha1
+status: {}

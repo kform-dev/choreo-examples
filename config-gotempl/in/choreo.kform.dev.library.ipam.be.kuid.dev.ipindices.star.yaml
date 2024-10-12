@@ -1,0 +1,33 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: ipam.be.kuid.dev.ipindices.star
+spec:
+  code: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\")\nload(\"ipam.be.kuid.dev.ipclaims.star\",
+    \"getIPClaim\")\n\ndef getIPIndexInstance(name, namespace):\n  resource = get_resource(\"ipam.be.kuid.dev/v1alpha1\",
+    \"IPIndex\")\n  rsp = client_get(name, namespace, resource[\"resource\"])\n  if
+    rsp[\"error\"] != None:\n    return None, \"ipindex \" + name + \" err: \" + rsp[\"error\"]\n
+    \ \n  if is_conditionready(rsp[\"resource\"], \"Ready\") != True:\n    return
+    None, \"ipindex \" + name + \" not ready\"\n  return rsp[\"resource\"], None\n\ndef
+    getPrefixes(ipindex):\n  spec = ipindex.get(\"spec\", {})\n  return spec.get(\"prefixes\",
+    [])\n\ndef getPrefixPrefix(prefix):\n  return prefix.get(\"prefix\", \"\")\n\ndef
+    getPrefixType(prefix):\n  return prefix.get(\"prefixType\", \"aggregate\")\n\ndef
+    getLabels(prefix):\n  return prefix.get(\"labels\", {})\n\ndef getIPIndex(name,
+    namespace, spec):\n  return {\n    \"apiVersion\": \"ipam.be.kuid.dev/v1alpha1\",\n
+    \   \"kind\": \"IPIndex\",\n    \"metadata\": {\n        \"name\": name,\n        \"namespace\":
+    namespace\n    },\n    \"spec\": spec,\n  }\n\ndef getEnabledAFs(ipindex):\n  afs
+    = {\n    \"ipv4\": False,\n    \"ipv6\": False,\n  }\n  for prefix in getPrefixes(ipindex):\n
+    \   if isIPv4(getPrefixPrefix(prefix)):\n      afs[\"ipv4\"] = True\n    if isIPv6(getPrefixPrefix(prefix)):\n
+    \     afs[\"ipv6\"] = True\n  return afs\n\ndef getIPIndexIPClaims(ipindex, parentName):\n
+    \ ipclaims = []\n  namespace = getNamespace(ipindex)\n  ipIndexName = getName(ipindex)\n\n
+    \ for af, enabled in getEnabledAFs(ipindex).items():\n    if enabled:\n      labels
+    = {}\n      labels[\"ipam.be.kuid.dev/address-family\"] = af\n      ipclaims.append(getIPClaim(parentName
+    + \".\" + af, namespace, getIPIndexIPClaimSpec(ipIndexName, \"pool\", labels)))\n
+    \ return ipclaims\n\ndef getIPIndexIPClaimSpec(ipindexName, ipPrefixType, labels):\n
+    \ return {\n        \"index\": ipindexName,\n        \"prefixType\": ipPrefixType,\n
+    \       \"selector\": {\n          \"matchLabels\": labels,\n        }\n      }\n"
+  type: starlark
+status: {}

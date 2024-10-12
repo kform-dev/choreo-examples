@@ -1,0 +1,76 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: infra.kuid.dev.nodes.if-si
+spec:
+  code:
+    reconciler.star: "load(\"api.k8s.io.object.star\", \"getName\", \"getNamespace\",
+      \"getDeletionTimestamp\", \"delFinalizer\", \"setFinalizer\")\nload(\"infra.kuid.dev.nodes.star\",
+      \"getPartition\", \"getNodeID\")\nload(\"id.kuid.dev.ids.star\", \"getEndpointID\",
+      \"genEndpointIDString\", \"genNodeIDString\")\nload(\"device.network.kubenet.dev.interfaces.star\",
+      \"getInterfaceSpec\", \"getInterface\")\nload(\"device.network.kubenet.dev.subinterfaces.star\",
+      \"getSubInterface\")\nload(\"ipam.be.kuid.dev.ipclaims.star\", \"getIPClaimedAddress\")\nload(\"ipam.be.kuid.dev.ipindices.star\",
+      \"getIPIndexInstance\", \"getEnabledAFs\")\n\nfinalizer = \"node.infra.kuid.dev/itfce\"\nconditionType
+      = \"InterfaceReady\"\n\ndef reconcile(self):\n  namespace = getNamespace(self)\n
+      \ partition = getPartition(self)\n\n  if getDeletionTimestamp(self) != None:\n
+      \   rsp = client_delete()\n    if rsp[\"error\"] != None:\n      return reconcile_result(self,
+      True, 0, conditionType, rsp[\"error\"], rsp[\"fatal\"])\n    \n    delFinalizer(self,
+      finalizer)\n    return reconcile_result(self, False, 0, conditionType, \"\",
+      False)\n\n  setFinalizer(self, finalizer)\n\n  if is_conditionready(self, \"IPClaimReady\")
+      != True:\n    return reconcile_result(self, True, 0, conditionType, \"ip claim
+      not ready\", False)\n\n  ipindex, err = getIPIndexInstance(partition + \".\"
+      + \"default\", namespace)\n  if err != None:\n    # we dont return the error
+      but wait for the network design retrigger\n    return reconcile_result(self,
+      False, 0, conditionType, err, False)\n\n  interfaces = getInterfaces(self)\n
+      \ for itfce in interfaces:\n    rsp = client_create(itfce)\n    if rsp[\"error\"]
+      != None:\n      return reconcile_result(self, True, 0, conditionType, rsp[\"error\"],
+      rsp[\"fatal\"])\n  \n  subInterfaces, err = getSubInterfaces(self, ipindex)\n
+      \ if err != None:\n    return reconcile_result(self, True, 0, conditionType,
+      err, False)\n  for subItfce in subInterfaces:\n    rsp = client_create(subItfce)\n
+      \   if rsp[\"error\"] != None:\n      return reconcile_result(self, True, 0,
+      conditionType, rsp[\"error\"], rsp[\"fatal\"]) \n  \n  rsp = client_apply()\n
+      \ if rsp[\"error\"] != None:\n    return reconcile_result(self, True, 0, conditionType,
+      rsp[\"error\"], rsp[\"fatal\"])\n  return reconcile_result(self, False, 0, conditionType,
+      \"\", False)\n\ndef getInterfaces(self):\n  nodeID = getNodeID(self)\n  namespace
+      = getNamespace(self)\n\n  interfaces = []\n  systemEPID = getEndpointID(nodeID,
+      0, 0, \"system\")\n  systemEPName = genEndpointIDString(systemEPID)\n  systemSpec
+      = getInterfaceSpec(systemEPID)   \n  interfaces.append(getInterface(systemEPName,
+      namespace, systemSpec))   \n\n  return interfaces\n\n\ndef getSubInterfaces(self,
+      ipindex):\n  nodeID = getNodeID(self)\n  nodeName = getName(self)\n  namespace
+      = getNamespace(self)\n\n  subinterfaces = []\n\n  id = 0\n  epID = getEndpointID(nodeID,
+      0, 0, \"system\")\n  siName = genEndpointIDString(epID) + \".\" + str(id)\n\n
+      \ spec = {}\n  for key, val in epID.items():\n    if key == \"port\" or key
+      == \"endpoint\":\n      spec[key] = int(val)\n    else:\n      spec[key] = val\n
+      \ spec[\"type\"] = \"routed\"\n  spec[\"id\"] = id\n  for af, enabled in getEnabledAFs(ipindex).items():\n
+      \   if enabled:\n      afaddrs = {}\n      afaddrs[\"addresses\"] = []\n      address,
+      err = getIPClaimedAddress(genNodeIDString(nodeID) + \".\" + af, namespace) \n
+      \     if err != None:\n        return None, err\n      afaddrs[\"addresses\"].append(address)\n
+      \     spec[af] = afaddrs\n  \n  subinterfaces.append(getSubInterface(siName,
+      namespace, spec))\n  return subinterfaces, None"
+  for:
+    group: infra.kuid.dev
+    kind: Node
+    selector:
+      match:
+        status.conditions.exists(c, c.type == 'IPClaimReady' && c.status == 'True'): "true"
+    version: v1alpha1
+  owns:
+  - group: device.network.kubenet.dev
+    kind: Interface
+    version: v1alpha1
+  - group: device.network.kubenet.dev
+    kind: SubInterface
+    version: v1alpha1
+  type: starlark
+  watches:
+  - group: ipam.be.kuid.dev
+    kind: IPIndex
+    selector:
+      match:
+        metadata.name: kubenet.default
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"
+    version: v1alpha1
+status: {}

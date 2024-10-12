@@ -1,0 +1,27 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: example.com.helloworlds.helloworld
+spec:
+  code:
+    reconciler.star: |-
+      finalizer = "helloworld.example.com/ready"
+      conditionType = "Ready"
+
+      def reconcile(self):
+        # self = helloworld
+
+        spec = self.get("spec", {})
+        spec["greeting"] = "hello choreo"
+        self['spec'] = spec
+        return reconcile_result(self, False, 0, conditionType, "", False)
+  for:
+    group: example.com
+    kind: HelloWorld
+    selector: {}
+    version: v1alpha1
+  type: starlark
+status: {}

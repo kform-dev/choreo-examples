@@ -24,4 +24,4 @@ test
 *.dic
 .vscode
 .choreo
-
+.db

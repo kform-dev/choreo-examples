@@ -1,0 +1,16 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: device.network.kubenet.dev.interfaces.star
+spec:
+  code: "def getInterfaceSpec(epID):\n  spec = {}\n  for key, val in epID.items():\n
+    \   if key == \"port\" or key == \"endpoint\":\n      spec[key] = int(val)\n    else:\n
+    \     spec[key] = val\n  return spec\n\ndef getInterface(name, namespace, spec):\n
+    \ return {\n    \"apiVersion\": \"device.network.kubenet.dev/v1alpha1\",\n    \"kind\":
+    \"Interface\",\n    \"metadata\": {\n        \"name\": name,\n        \"namespace\":
+    namespace,\n    },\n    \"spec\": spec,\n  }\n\n\n        \n\n        \n\n           "
+  type: starlark
+status: {}

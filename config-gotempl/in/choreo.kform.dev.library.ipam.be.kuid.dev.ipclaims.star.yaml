@@ -1,0 +1,20 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Library
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: ipam.be.kuid.dev.ipclaims.star
+spec:
+  code: "def getIPClaimedAddress(name, namespace):\n  resource = get_resource(\"ipam.be.kuid.dev/v1alpha1\",
+    \"IPClaim\")\n  rsp = client_get(name, namespace, resource[\"resource\"])\n  if
+    rsp[\"error\"] != None:\n    return None, \"ipclaim \" + name + \" err: \" + rsp[\"error\"]\n
+    \ \n  if is_conditionready(rsp[\"resource\"], \"Ready\") != True:\n    return
+    None, \"ipclaim \" + name + \" not ready\"\n  status = rsp[\"resource\"].get(\"status\",
+    {})\n  address = status.get(\"address\", \"\")\n  if address == \"\":\n    return
+    None, \"ipclaim \" + name + \" no address in ip claim\"\n  return address, None\n\ndef
+    getIPClaim(name, namespace, spec):\n  return {\n    \"apiVersion\": \"ipam.be.kuid.dev/v1alpha1\",\n
+    \   \"kind\": \"IPClaim\",\n    \"metadata\": {\n        \"name\": name,\n        \"namespace\":
+    namespace\n    },\n    \"spec\": spec,\n  }"
+  type: starlark
+status: {}
