@@ -175,6 +175,12 @@ def reconcile(self):
   return reconcile_result(self, False, 0, conditionType, "", False)
 ```
 
+After changing the business logic run the following command. This takes the reconcilers and libraries and update the reconciler and library files with the updated busines logic
+
+```bash
+choreoctl dev parse hello-world
+```
+
 This should result in the following outcome if we run the business logic again.
 
 ```bash
@@ -212,6 +218,12 @@ def reconcile(self):
   spec["greetings"] = "hello me"
   self['spec'] = spec
   return reconcile_result(self, False, 0, conditionType, "", False)
+```
+
+update the reconciler input files.
+
+```bash
+choreoctl dev parse hello-world
 ```
 
 when executing

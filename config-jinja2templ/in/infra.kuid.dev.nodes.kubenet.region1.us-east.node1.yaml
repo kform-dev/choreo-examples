@@ -2,9 +2,9 @@ apiVersion: infra.kuid.dev/v1alpha1
 kind: Node
 metadata:
   namespace: default
-  name: kubenet.region1.us-east.node2
+  name: kubenet.region1.us-east.node1
 spec:
-  node: node2
+  node: node1
   partition: kubenet
   platformType: ixrd3
   provider: srlinux.nokia.com

@@ -51,7 +51,7 @@ choreoctl api-resources
 ## running the business logic
 
 ```bash
-chorectl run once
+choreoctl run once
 ```
 
 check if we get the proper result. Given the `HelloWorld` spec was empty we get the default greeting

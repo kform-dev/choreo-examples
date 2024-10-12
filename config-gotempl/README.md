@@ -91,7 +91,7 @@ There is 2 reconcilers as per the interface exercise. On top we added 2 addition
 ## running the business logic
 
 ```bash
-chorectl run once
+choreoctl run once
 ```
 
 check if we get the proper result based on the input.
@@ -247,7 +247,7 @@ spec:
 run the choreo
 
 ```bash
-chorectl run once 
+choreoctl run once 
 ```
 
 Now we should have subinterfaces for both nodes and IPClaims for both nodes
@@ -292,7 +292,7 @@ spec:
 run the choreo
 
 ```bash
-chorectl run once 
+choreoctl run once 
 ```
 
 Now we have an IPv6 address for each node
@@ -337,7 +337,7 @@ spec:
 run the choreo
 
 ```bash
-chorectl run once 
+choreoctl run once 
 ```
 
 You see that the IPv4 address got removed from each node
@@ -366,7 +366,7 @@ e.g. delete the node1 input from the input files e.g.
 run the choreo
 
 ```bash
-chorectl run once 
+choreoctl run once 
 ```
 
 You can see the `IPClaim`, `Interface` and `SubInterface` resource for node1 get removed from the system
