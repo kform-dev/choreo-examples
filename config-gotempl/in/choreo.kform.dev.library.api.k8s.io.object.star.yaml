@@ -3,26 +3,8 @@ kind: Library
 metadata:
   annotations:
     api.choreo.kform.dev/origin: '{"kind":"File"}'
-  creationTimestamp: "2024-10-01T07:10:05Z"
-  managedFields:
-  - apiVersion: choreo.kform.dev/v1alpha1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          .: {}
-          f:api.choreo.kform.dev/origin: {}
-      f:spec:
-        .: {}
-        f:code: {}
-        f:type: {}
-      f:status: {}
-    manager: inputfileloader
-    operation: Apply
-    time: "2024-10-01T07:10:05Z"
+  creationTimestamp: null
   name: api.k8s.io.object.star
-  resourceVersion: "0"
-  uid: 2b772046-74e9-40a8-8b6b-50b2ed0bcde9
 spec:
   code: |-
     def getMetadata(self):

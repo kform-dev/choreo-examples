@@ -3,35 +3,8 @@ kind: Reconciler
 metadata:
   annotations:
     api.choreo.kform.dev/origin: '{"kind":"File"}'
-  creationTimestamp: "2024-10-01T07:10:05Z"
-  managedFields:
-  - apiVersion: choreo.kform.dev/v1alpha1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          .: {}
-          f:api.choreo.kform.dev/origin: {}
-      f:spec:
-        .: {}
-        f:code:
-          .: {}
-          f:reconciler.star: {}
-        f:for:
-          .: {}
-          f:group: {}
-          f:kind: {}
-          f:selector: {}
-          f:version: {}
-        f:owns: {}
-        f:type: {}
-      f:status: {}
-    manager: inputfileloader
-    operation: Apply
-    time: "2024-10-01T07:10:05Z"
+  creationTimestamp: null
   name: example.com.helloworlds.helloworld
-  resourceVersion: "0"
-  uid: ebbc49dd-f9ef-4a22-8dbd-83c71a35f84b
 spec:
   code:
     reconciler.star: "load(\"api.k8s.io.object.star\", \"getDeletionTimestamp\", \"delFinalizer\",

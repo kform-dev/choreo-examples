@@ -1,0 +1,62 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: device.kubenet.dev.subinterfaces.config.nokiasrl
+spec:
+  code:
+    main.tpl: "apiVersion: config.sdcio.dev/v1alpha1\nkind: Config\nmetadata:\n  name:
+      {{ .metadata.name }}\n  namespace: {{ .metadata.namespace }}\n  labels:\n    config.sdcio.dev/targetName:
+      {{ .spec.node }}\n    config.sdcio.dev/targetNamespace: {{ .metadata.namespace
+      }}\n  ownerReferences:\n  - apiVersion: {{ .apiVersion }}\n    controller: true\n
+      \   kind: {{ .kind }}\n    name: {{ .metadata.name }}\n    uid: {{ .metadata.uid
+      }}\nspec:\n  priority: 10\n  config:\n  - path: /\n    value: \n{{- template
+      \"srlsubinterface\" .spec}}\n"
+    subinterface.tpl: |
+      {{- define "srlsubinterface"}}
+            interface:
+            - name: {{ .name }}
+              subinterface:
+              - index: {{ .id }}
+                type: {{ .type }}
+                description: k8s-{{ printf "%s.%d" .name .id }}
+                admin-state: enable
+           {{- if .ipv4 }}
+                ipv4:
+                  admin-state: enable
+              {{- if ne 0 (len .ipv4.addresses)}}
+                  address:
+              {{- range $index, $address := .ipv4.addresses}}
+                  - ip-prefix: {{ $address }}
+              {{- end }}
+                  unnumbered:
+                    admin-state: disable
+              {{- end}}
+           {{- end}}
+           {{- if .ipv6 }}
+                ipv6:
+                  admin-state: enable
+                  router-advertosement:
+                    router-role:
+                      admin-state: enable
+              {{- if ne 0 (len .ipv6.addresses)}}
+                  address:
+              {{- range $index, $address := .ipv6.addresses}}
+                  - ip-prefix: {{ $address }}
+              {{- end }}
+              {{- end}}
+           {{- end}}
+      {{- end }}
+  for:
+    group: device.network.kubenet.dev
+    kind: SubInterface
+    selector: {}
+    version: v1alpha1
+  owns:
+  - group: config.sdcio.dev
+    kind: Config
+    version: v1alpha1
+  type: gotemplate
+status: {}

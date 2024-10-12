@@ -1,0 +1,37 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  annotations:
+    api.choreo.kform.dev/origin: '{"kind":"File"}'
+  creationTimestamp: null
+  name: device.kubenet.dev.interfaces.config.nokiasrl
+spec:
+  code:
+    interface.tpl: |
+      {{- define "srlinterface"}}
+            interface:
+            - name: {{ .name }}
+              description: k8s-{{ .name }}
+              admin-state: enable
+            {{- if .vlanTagging}}
+              vlan-tagging: true
+            {{- end}}
+      {{- end }}
+    main.tpl: "apiVersion: config.sdcio.dev/v1alpha1\nkind: Config\nmetadata:\n  name:
+      {{ .metadata.name }}\n  namespace: {{ .metadata.namespace }}\n  labels:\n    config.sdcio.dev/targetName:
+      {{ .spec.node }}\n    config.sdcio.dev/targetNamespace: {{ .metadata.namespace
+      }}\n  ownerReferences:\n  - apiVersion: {{ .apiVersion }}\n    controller: true\n
+      \   kind: {{ .kind }}\n    name: {{ .metadata.name }}\n    uid: {{ .metadata.uid
+      }}\nspec:\n  priority: 10\n  config:\n  - path: /\n    value: \n{{- template
+      \"srlinterface\" .spec}}\n"
+  for:
+    group: device.network.kubenet.dev
+    kind: Interface
+    selector: {}
+    version: v1alpha1
+  owns:
+  - group: config.sdcio.dev
+    kind: Config
+    version: v1alpha1
+  type: gotemplate
+status: {}
